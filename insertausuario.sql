@@ -19,11 +19,6 @@ DECLARE _fecharegistro timestamp;
 
 BEGIN
 	_fecharegistro := (SELECT (now() AT TIME ZONE 'utc'));
-
-	IF EXISTS (select id_usuario from usuario where rut = _rut OR email = _email)
-	THEN
-		RAISE EXCEPTION '-1';
-	END IF;
 	
 	INSERT INTO usuario (nombre,apellido,email,rut,id_pais,id_region,id_ciudad,id_comuna,password,fecha_registro)
 	VALUES (_nombre,_apellido,_email,_rut,_pais,_region,_ciudad,_comuna,_password,_fecharegistro);
