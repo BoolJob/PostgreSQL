@@ -1,0 +1,11 @@
+-- Type: busqueda_type
+
+-- DROP TYPE busqueda_type;
+
+CREATE TYPE busqueda_type AS
+   (id bigint,
+    titulo character varying,
+    descripcion_corta character varying);
+ALTER TYPE busqueda_type
+  OWNER TO postgres;
+

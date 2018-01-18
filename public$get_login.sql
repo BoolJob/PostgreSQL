@@ -18,24 +18,20 @@ BEGIN
 	_row := 0;
 	_estado := 1;
 	
-	UPDATE 	usuario 
-	SET 	ultimo_ingreso = _fecha,
-		token_email = ''
-	WHERE 	email = _email AND 
-		password = _password AND
-		estado = 1;
-
-	GET DIAGNOSTICS _row = ROW_COUNT;
+	SELECT common$usuario_valido INTO _estado FROM common$usuario_valido(_email, _password);
 
 	-- esta OK
-	IF _row = 1
+	IF _estado = 1
 	THEN
-		return _row;
+		UPDATE 	usuario 
+		SET 	ultimo_ingreso = _fecha,
+			token_email = ''
+		WHERE 	email = _email AND 
+			password = _password;
+		
+		return _estado;
 	END IF;
 
-	SELECT usuario.estado INTO _estado FROM usuario WHERE email = _email AND password = _password;
-
-	-- usuario no ha validado email
 	IF _estado = 0
 	THEN
 		UPDATE 	usuario 
@@ -51,20 +47,7 @@ BEGIN
 		
 	END IF;
 
-	-- algun estado extra
-	IF _estado IS NOT NULL 
-	THEN
-		RETURN -(_estado);
-	END IF;
-
-	-- email no existe
-	IF NOT EXISTS (SELECT id_usuario FROM usuario WHERE email = _email)
-	THEN
-		RETURN -1;
-	END IF;
-
-	-- pass incorrecta
-	RETURN -2;
+	RETURN _estado;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE

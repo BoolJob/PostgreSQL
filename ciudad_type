@@ -1,0 +1,10 @@
+-- Type: ciudad_type
+
+-- DROP TYPE ciudad_type;
+
+CREATE TYPE ciudad_type AS
+   (id_ciudad bigint,
+    nombre character varying);
+ALTER TYPE ciudad_type
+  OWNER TO postgres;
+
